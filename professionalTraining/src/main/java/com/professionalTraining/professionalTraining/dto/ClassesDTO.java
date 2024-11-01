@@ -20,5 +20,4 @@ public class ClassesDTO {
     @NotNull(message = "Room number is required")
     private Integer roomNum;
 
-    private Long instructorId;
 }
