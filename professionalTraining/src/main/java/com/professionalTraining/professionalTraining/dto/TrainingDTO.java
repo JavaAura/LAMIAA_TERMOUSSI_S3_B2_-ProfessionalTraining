@@ -1,6 +1,8 @@
 package com.professionalTraining.professionalTraining.dto;
 
 import java.time.LocalDate;
+
+import com.professionalTraining.professionalTraining.entities.enums.TrainingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,11 +31,11 @@ public class TrainingDTO {
     @Min(value = 1, message = "Maximum capacity must be at least 1")
     private Integer maxCapacity;
 
-    @Future(message = "Start date must be in the future")
+    @NotBlank(message = "Start date must not be null")
     private LocalDate startDate;
 
-    @Future(message = "End date must be in the future")
+    @NotBlank(message = "End date must not be null")
     private LocalDate endDate;
 
-    private String status;
+    private TrainingStatus status;
 }
