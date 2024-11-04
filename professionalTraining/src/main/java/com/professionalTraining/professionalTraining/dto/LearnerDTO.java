@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class LearnerDTO extends PersonDTO{
     private String level;
     private Long classId;
+    private Long trainingId;
 }

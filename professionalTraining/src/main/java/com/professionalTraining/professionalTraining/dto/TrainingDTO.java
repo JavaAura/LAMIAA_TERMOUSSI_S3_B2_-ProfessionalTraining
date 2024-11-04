@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -31,10 +32,10 @@ public class TrainingDTO {
     @Min(value = 1, message = "Maximum capacity must be at least 1")
     private Integer maxCapacity;
 
-    @NotBlank(message = "Start date must not be null")
+    @NotNull(message = "Start date must not be null")
     private LocalDate startDate;
 
-    @NotBlank(message = "End date must not be null")
+    @NotNull(message = "End date must not be null")
     private LocalDate endDate;
 
     private TrainingStatus status;

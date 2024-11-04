@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InstructorDTO extends PersonDTO {
     private String speciality;
-    private Long classId;
+
 
     private Long trainingId;
 }

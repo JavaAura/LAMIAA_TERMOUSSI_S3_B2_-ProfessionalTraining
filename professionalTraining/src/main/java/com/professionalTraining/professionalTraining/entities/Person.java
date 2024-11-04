@@ -19,13 +19,13 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "Firstname cannot be null")
     private String firstname;
 
-    @NotNull
+    @NotNull(message = "Lastname cannot be null")
     private String lastname;
 
-    @NotNull
+    @NotNull(message = "email cannot be null")
     private String email;
 
 }

@@ -47,4 +47,7 @@ public class Training {
     @OneToMany(mappedBy = "training")
     private List<Instructor> instructors;
 
+    @OneToMany(mappedBy = "training")
+    private List<Learner> learners;
+
 }

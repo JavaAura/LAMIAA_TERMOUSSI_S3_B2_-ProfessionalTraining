@@ -24,7 +24,8 @@ public class Classes {
     @NotNull
     private Integer roomNum;
 
-    @OneToOne(mappedBy = "assignedClass")
+    @OneToOne
+    @JoinColumn(name = "instructor_id", unique = true)
     private Instructor instructor;
 
     @OneToMany(mappedBy = "assignedClass")

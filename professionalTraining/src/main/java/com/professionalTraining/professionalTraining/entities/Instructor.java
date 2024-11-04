@@ -3,6 +3,7 @@ package com.professionalTraining.professionalTraining.entities;
 
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -12,13 +13,13 @@ import javax.persistence.DiscriminatorValue;
 @DiscriminatorValue("INSTRUCTOR")
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Instructor extends Person {
 
     @NotNull
     private String speciality;
 
-    @OneToOne
-    @JoinColumn(name = "class_id",unique = true)
+    @OneToOne(mappedBy = "instructor")
     private Classes assignedClass;
 
     @ManyToOne
