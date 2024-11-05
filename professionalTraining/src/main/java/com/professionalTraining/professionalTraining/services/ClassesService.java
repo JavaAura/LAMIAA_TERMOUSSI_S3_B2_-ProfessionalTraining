@@ -7,8 +7,12 @@ import com.professionalTraining.professionalTraining.exception.ClassesNotFoundEx
 import com.professionalTraining.professionalTraining.mapper.ClassesMapper;
 import com.professionalTraining.professionalTraining.repositories.ClassesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -33,13 +37,10 @@ public class ClassesService {
         return classesMapper.toDTO(savedClass);
     }
 
-    public List<ClassesDTO> getAllClasses() {
-        return classesRepository.findAll()
-                .stream()
-                .map(classesMapper::toDTO)
-                .collect(Collectors.toList());
+    public Page<ClassesDTO> getAllClasses(Pageable pageable) {
+        Page<Classes> classesPage = classesRepository.findAll(pageable);
+        return classesPage.map(classesMapper::toDTO);
     }
-
     public ClassesDTO getClassById(Long id) {
         Classes classes = classesRepository.findById(id)
                 .orElseThrow(() -> new ClassesNotFoundException(id));

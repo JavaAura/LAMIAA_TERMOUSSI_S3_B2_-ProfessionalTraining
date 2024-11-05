@@ -11,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -60,7 +64,7 @@ public class ClassesControllerIntegrationTest {
     }
 
     @Test
-    public void getAllClasses_ShouldReturnListOfClasses() throws Exception {
+    public void getAllClasses_ShouldReturnPageOfClasses() throws Exception {
         ClassesDTO classesDTO1 = new ClassesDTO();
         classesDTO1.setName("Java Basics");
         classesDTO1.setRoomNum(101);
@@ -75,21 +79,23 @@ public class ClassesControllerIntegrationTest {
         classesDTOList.add(classesDTO1);
         classesDTOList.add(classesDTO2);
 
-        when(classesService.getAllClasses()).thenReturn(classesDTOList);
+        Page<ClassesDTO> classesDTOPage = new PageImpl<>(classesDTOList, PageRequest.of(0, 10), classesDTOList.size());
 
-        mockMvc.perform(get("/classes"))
+        when(classesService.getAllClasses(any(Pageable.class))).thenReturn(classesDTOPage);
+
+        mockMvc.perform(get("/classes?page=0&size=10")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].name").value("Java Basics"))
-                .andExpect(jsonPath("$[0].roomNum").value(101))
-                .andExpect(jsonPath("$[0].instructorId").value(1L))
-                .andExpect(jsonPath("$[1].name").value("Spring Basics"))
-                .andExpect(jsonPath("$[1].roomNum").value(102))
-                .andExpect(jsonPath("$[1].instructorId").value(2L));
+                .andExpect(jsonPath("$.content.length()").value(2)) // Check content length
+                .andExpect(jsonPath("$.content[0].name").value("Java Basics"))
+                .andExpect(jsonPath("$.content[0].roomNum").value(101))
+                .andExpect(jsonPath("$.content[0].instructorId").value(1L))
+                .andExpect(jsonPath("$.content[1].name").value("Spring Basics"))
+                .andExpect(jsonPath("$.content[1].roomNum").value(102))
+                .andExpect(jsonPath("$.content[1].instructorId").value(2L));
 
-        verify(classesService, times(1)).getAllClasses();
+        verify(classesService, times(1)).getAllClasses(any(Pageable.class)); // Verify service interaction with pageable
     }
-
     @Test
     public void getClassById_ShouldReturnClass() throws Exception {
         ClassesDTO classesDTO = new ClassesDTO();

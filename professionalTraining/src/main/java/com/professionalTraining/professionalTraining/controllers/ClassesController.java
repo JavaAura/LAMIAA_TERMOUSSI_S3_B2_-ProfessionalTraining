@@ -3,6 +3,8 @@ package com.professionalTraining.professionalTraining.controllers;
 import com.professionalTraining.professionalTraining.dto.ClassesDTO;
 import com.professionalTraining.professionalTraining.services.ClassesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +29,11 @@ public class ClassesController {
         return ResponseEntity.ok(savedClass);
     }
 
+
     @GetMapping
-    public ResponseEntity<List<ClassesDTO>> getAllClasses() {
-        List<ClassesDTO> classes = classesService.getAllClasses();
-        return ResponseEntity.ok(classes);
+    public ResponseEntity<Page<ClassesDTO>> getAllClasses(Pageable pageable) {
+        Page<ClassesDTO> classesPage = classesService.getAllClasses(pageable);
+        return ResponseEntity.ok(classesPage);
     }
 
     @GetMapping("/{id}")

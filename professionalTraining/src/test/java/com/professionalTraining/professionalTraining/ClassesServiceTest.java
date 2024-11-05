@@ -12,6 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -59,16 +63,27 @@ public class ClassesServiceTest {
 
     @Test
     void getAllClasses_Success() {
+        // Create a mock list of classes and convert it to a Page
         List<Classes> classesList = Arrays.asList(classes);
-        when(classesRepository.findAll()).thenReturn(classesList);
+        Page<Classes> classesPage = new PageImpl<>(classesList);
+
+        // Mock the repository to return the page
+        when(classesRepository.findAll(any(Pageable.class))).thenReturn(classesPage);
+
+        // Mock the mapper to convert Classes to ClassesDTO
         when(classesMapper.toDTO(any(Classes.class))).thenReturn(classesDTO);
 
-        List<ClassesDTO> classesDTOList = classesService.getAllClasses();
+        // Create a Pageable object for testing
+        Pageable pageable = PageRequest.of(0, 10); // Page 0, Size 10
 
-        assertEquals(1, classesDTOList.size());
-        verify(classesRepository, times(1)).findAll();
+        // Call the service method
+        Page<ClassesDTO> classesDTOPage = classesService.getAllClasses(pageable);
+
+        // Assertions
+        assertEquals(1, classesDTOPage.getContent().size()); // Check content size
+        assertEquals(classesDTO, classesDTOPage.getContent().get(0)); // Check first element
+        verify(classesRepository, times(1)).findAll(any(Pageable.class)); // Verify findAll is called with pageable
     }
-
     @Test
     void getClassById_Success() {
         Long classId = 1L;
